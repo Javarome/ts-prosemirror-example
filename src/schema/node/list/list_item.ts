@@ -1,3 +1,6 @@
+/*
+ * This code is a TypeScript port of https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.js
+ */
 import {DOMOutputSpec, DOMOutputSpecArray, NodeSpec} from "prosemirror-model"
 
 const liDOM: DOMOutputSpecArray = ["li", 0]

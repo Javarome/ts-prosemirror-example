@@ -24,7 +24,6 @@ export {buildMenuItems, buildKeymap, buildInputRules}
 // will automatically enable this basic functionality in an editor.
 
 interface SetupOptions {
-
   /**
    *   The schema to generate key bindings and menu items for.
    */

@@ -1,5 +1,6 @@
 import {
   chainCommands,
+  Command,
   exitCode,
   joinDown,
   joinUp,
@@ -47,14 +48,18 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
  * argument, which maps key names (say `"Mod-B"` to either `false`, to
  * remove the binding, or a new key name string.
  */
-export function buildKeymap(schema: Schema, mapKeys?: Object): Keymap {
+export function buildKeymap<S extends Schema>(schema: S, mapKeys?: Keymap<S>): Keymap<S> {
   let keys: Keymap = {}, type
 
-  function bind(key, cmd) {
+  function bind(key: string, cmd: Command) {
     if (mapKeys) {
       let mapped = mapKeys[key]
-      if (mapped === false) return
-      if (mapped) key = mapped
+      if (mapped === false) {
+        return
+      }
+      if (mapped) {
+        key = mapped
+      }
     }
     keys[key] = cmd
   }
@@ -62,8 +67,9 @@ export function buildKeymap(schema: Schema, mapKeys?: Object): Keymap {
   bind("Mod-z", undo)
   bind("Shift-Mod-z", redo)
   bind("Backspace", undoInputRule)
-  if (!mac) bind("Mod-y", redo)
-
+  if (!mac) {
+    bind("Mod-y", redo)
+  }
   bind("Alt-ArrowUp", joinUp)
   bind("Alt-ArrowDown", joinDown)
   bind("Mod-BracketLeft", lift)

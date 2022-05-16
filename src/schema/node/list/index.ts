@@ -1,16 +1,20 @@
+/*
+ * This code is a TypeScript port of https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.js
+ */
 import {canSplit, findWrapping, liftTarget, ReplaceAroundStep} from "prosemirror-transform"
 import {Fragment, NodeRange, NodeSpec, NodeType, Slice} from "prosemirror-model"
-import {EditorState, NodeSelection, Transaction} from "prosemirror-state"
+import {EditorState, NodeSelection, Selection, Transaction} from "prosemirror-state"
 import {orderedList} from "./ordered_list"
 import {bulletList} from "./bullet_list"
 import {listItem} from "./list_item"
+import OrderedMap from "orderedmap"
 
-function add(obj, props) {
-  let copy = {}
-  for (let prop in obj) {
+function add(obj: Record<string, unknown>, props: Record<string, unknown>) {
+  const copy: Record<string, unknown> = {}
+  for (const prop in obj) {
     copy[prop] = obj[prop]
   }
-  for (let prop in props) {
+  for (const prop in props) {
     copy[prop] = props[prop]
   }
   return copy
@@ -29,7 +33,7 @@ function add(obj, props) {
  * it should have a shape like `"paragraph block*"` or `"paragraph (ordered_list | bullet_list)*"`.
  * @param `listGroup` can be given to assign a group name to the list node types, for example `"block"`.
  */
-export function addListNodes(nodes: (OrderedMap<NodeSpec>), itemContent: string, listGroup?: string): OrderedMap<NodeSpec> {
+export function addListNodes(nodes: OrderedMap<NodeSpec>, itemContent: string, listGroup?: string): OrderedMap<NodeSpec> {
   return nodes.append({
     ordered_list: add(orderedList, {content: "list_item+", group: listGroup}),
     bullet_list: add(bulletList, {content: "list_item+", group: listGroup}),
@@ -143,7 +147,7 @@ export function splitListItem(itemType: NodeType) {
           }
         })
         if (sel > -1) {
-          tr.setSelection(state.selection.constructor.near(tr.doc.resolve(sel)))
+          tr.setSelection(Selection.near(tr.doc.resolve(sel)))
         }
         dispatch(tr.scrollIntoView())
       }
